@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "neodgm";
+  font-display: swap;
+  font-style: normal;
+  font-weight: normal;
+  src: url("./neodgm.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PF스타더스트";
+  font-display: swap;
+  font-style: normal;
+  font-weight: normal;
+  src: url("./stardust.ttf") format("truetype");
+}
