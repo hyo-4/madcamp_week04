@@ -18,9 +18,6 @@ export default function LoginPage() {
   };
 
   const handleLogin = () => {
-    // 여기에 로그인 처리 로직을 추가합니다.
-    // username과 password를 사용하여 서버로 요청을 보내고 인증을 확인하는 등의 작업을 수행합니다.
-    // 이 예제에서는 간단히 콘솔에 입력된 값을 출력하는 것으로 대체합니다.
     console.log("Username:", username);
     console.log("Password:", password);
   };

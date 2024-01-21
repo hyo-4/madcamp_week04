@@ -23,9 +23,17 @@ const Folder: React.FC<GroupProps> = ({ groupName }) => {
 export default Folder;
 
 const GroupNameText = styled.p`
-  margin: 0;
+  margin: 1rem;
   padding: 0;
   font-size: 23px;
-  color: #494949;
+  color: #454545;
   font-family: "neodgm";
+  transition:
+    color 0.1s,
+    transform 0.1s;
+
+  &:hover {
+    color: #000000;
+    transform: scale(1.1);
+  }
 `;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useCountStore } from "../store/count";
 import backgroundimage from "../assets/image8.png";
 import leftImage from "../assets/real-2.png";
@@ -9,6 +9,7 @@ import { FiMenu } from "react-icons/fi";
 import Folder from "../components/folder";
 import "../fonts/font.css";
 import Lockedletter from "../components/Lockedletter";
+import API from "../services/api/index";
 
 const sortDummyLetterDataByTime = (
   data: { name: string; time: string; group: string }[]
@@ -61,6 +62,7 @@ const MainPage: React.FC = () => {
         <ButtonsContainer>
           <MyPageBtn>마이페이지</MyPageBtn>
           <AddGroupBtn>그룹 추가하기</AddGroupBtn>
+          <LogoutBtn>로그아웃</LogoutBtn>
         </ButtonsContainer>
         <PageContainer>
           <LeftContainer>
@@ -101,11 +103,7 @@ const PageContainer = styled.div`
 `;
 
 const LayoutContainer = styled.div`
-  background: linear-gradient(
-    to bottom,
-    #c0e1ee,
-    #f1e0e6
-  ); /* 파스텔톤 파란색 그라데이션 */
+  background: linear-gradient(to bottom, #c0e1ee, #ffd5c3);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -127,6 +125,14 @@ const MyPageBtn = styled.button`
   font-size: 22px;
   margin-top: 1rem;
   padding: 1rem;
+  transition:
+    color 0.1s,
+    transform 0.1s;
+
+  &:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+  }
 `;
 
 const AddGroupBtn = styled.button`
@@ -137,8 +143,35 @@ const AddGroupBtn = styled.button`
   font-family: "neodgm";
   font-size: 22px;
   margin-top: 1rem;
+  padding: 1rem;
+  transition:
+    color 0.1s,
+    transform 0.1s;
+
+  &:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+`;
+
+const LogoutBtn = styled.button`
+  display: flex;
+  background: none;
+  border: none;
+  display: flex;
+  font-family: "neodgm";
+  font-size: 22px;
+  margin-top: 1rem;
   margin-right: 2rem;
   padding: 1rem;
+  transition:
+    color 0.1s,
+    transform 0.1s;
+
+  &:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+  }
 `;
 
 const LeftContainer = styled.div`
