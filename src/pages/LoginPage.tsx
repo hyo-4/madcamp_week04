@@ -3,6 +3,7 @@ import styled, { createGlobalStyle, keyframes } from "styled-components";
 import logogif from "../assets/logogif-4.gif";
 import text from "../assets/textField.png";
 import logoImage from "../assets/logo.png";
+import axios from "axios";
 import "../fonts/font.css";
 
 export default function LoginPage() {
@@ -21,6 +22,15 @@ export default function LoginPage() {
     // 여기에 로그인 처리 로직을 추가합니다.
     // username과 password를 사용하여 서버로 요청을 보내고 인증을 확인하는 등의 작업을 수행합니다.
     // 이 예제에서는 간단히 콘솔에 입력된 값을 출력하는 것으로 대체합니다.
+    axios
+      .post("http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/login", {
+        username: username,
+        password: password,
+      })
+      .then((res)=> {
+        console.log(res.data);
+      })
+    
     console.log("Username:", username);
     console.log("Password:", password);
   };
