@@ -44,8 +44,8 @@ const MainPage: React.FC = () => {
   ];
 
   const DummyLetterData = [
-    { name: "허가네장녀", time: "2024-01-20T21:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-20T23:30:00", group: "4분반" },
+    { name: "허가네장녀", time: "2024-01-23T21:30:00", group: "4분반" },
+    { name: "허가네장녀3", time: "2024-01-23T23:30:00", group: "4분반" },
     { name: "허가네장녀3", time: "2024-01-20T22:30:00", group: "4분반" },
     { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },
     { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },

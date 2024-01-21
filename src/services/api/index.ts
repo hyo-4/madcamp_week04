@@ -44,6 +44,7 @@ class API {
     return this.CALL({
       method: "POST",
       url,
+      withCredentials: true,
       ...params,
     });
   }
