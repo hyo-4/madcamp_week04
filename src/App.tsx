@@ -2,9 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import AddGroupPage from "./pages/AddGroupPage";
 import GroupPage from "./pages/GroupPage";
 import MyPage from "./pages/MyPage";
+import MemberPage from "./pages/MemberPage";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +14,7 @@ const App: React.FC = () => {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/group/:groupid" element={<GroupPage />} />
+      <Route path="/group/:groupid/member/:memberid" element={<MemberPage />} />
     </Routes>
   );
 };

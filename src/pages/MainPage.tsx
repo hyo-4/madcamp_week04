@@ -31,21 +31,6 @@ const MainPage: React.FC = () => {
     { groupid: "3", groupname: "충남여고" },
     { groupid: "4", groupname: "몰캠4분반" },
     { groupid: "5", groupname: "dummy" },
-    { groupid: "6", groupname: "dummy" },
-    { groupid: "7", groupname: "dummy" },
-    { groupid: "8", groupname: "dummy" },
-    { groupid: "9", groupname: "dummy" },
-    { groupid: "10", groupname: "dummy" },
-    { groupid: "11", groupname: "dummy" },
-    { groupid: "12", groupname: "dummy" },
-    { groupid: "13", groupname: "dummy" },
-    { groupid: "14", groupname: "dummy" },
-    { groupid: "15", groupname: "dummy" },
-    { groupid: "16", groupname: "dummy" },
-    { groupid: "17", groupname: "dummy" },
-    { groupid: "18", groupname: "dummy" },
-    { groupid: "19", groupname: "dummy" },
-    { groupid: "20", groupname: "dummy" },
   ];
 
   const DummyLetterData = [
@@ -200,6 +185,7 @@ const LeftContainer = styled.div`
   flex: 8;
   margin-right: 1rem;
   border-radius: 10px;
+  padding-top: 2rem;
   height: 80vh;
   color: black;
   text-align: center;
