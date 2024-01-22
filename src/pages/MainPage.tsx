@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { useCountStore } from "../store/count";
+import React, { useEffect, useState } from "react";
+import { useUserStore } from "../store/user";
 import backgroundimage from "../assets/image8.png";
+import { useNavigate } from "react-router-dom";
 import leftImage from "../assets/real-2.png";
-import rightImage from "../assets/realphone02.png";
 import lockimage from "../assets/letter.png";
 import styled from "styled-components";
 import { FiMenu } from "react-icons/fi";
@@ -10,6 +10,7 @@ import Folder from "../components/folder";
 import "../fonts/font.css";
 import Lockedletter from "../components/Lockedletter";
 import API from "../services/api/index";
+import Modal from "./AddGroupPage";
 
 const sortDummyLetterDataByTime = (
   data: { name: string; time: string; group: string }[]
@@ -20,56 +21,76 @@ const sortDummyLetterDataByTime = (
 };
 
 const MainPage: React.FC = () => {
-  const username = "user";
+  const { userid, setUserId, username, setUserName } = useUserStore();
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+
+  const nav = useNavigate();
   const DummyData = [
-    "CS 20학번",
-    "2-14반",
-    "00중",
-    "몰캠4분반",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
-    "dummy",
+    { groupid: "1", groupname: "SMWU 20학번" },
+    { groupid: "2", groupname: "2-14반" },
+    { groupid: "3", groupname: "충남여고" },
+    { groupid: "4", groupname: "몰캠4분반" },
+    { groupid: "5", groupname: "dummy" },
+    { groupid: "6", groupname: "dummy" },
+    { groupid: "7", groupname: "dummy" },
+    { groupid: "8", groupname: "dummy" },
+    { groupid: "9", groupname: "dummy" },
+    { groupid: "10", groupname: "dummy" },
+    { groupid: "11", groupname: "dummy" },
+    { groupid: "12", groupname: "dummy" },
+    { groupid: "13", groupname: "dummy" },
+    { groupid: "14", groupname: "dummy" },
+    { groupid: "15", groupname: "dummy" },
+    { groupid: "16", groupname: "dummy" },
+    { groupid: "17", groupname: "dummy" },
+    { groupid: "18", groupname: "dummy" },
+    { groupid: "19", groupname: "dummy" },
+    { groupid: "20", groupname: "dummy" },
   ];
 
   const DummyLetterData = [
-    { name: "허가네장녀", time: "2024-01-23T21:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-23T23:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-20T22:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-21T21:30:00", group: "4분반" },
+    { name: "허가네장녀3", time: "2024-01-25T21:00:00", group: "4분반" },
+    { name: "허가네장녀3", time: "2024-01-26T21:30:00", group: "4분반" },
   ];
   const sortedDummyLetterData = sortDummyLetterDataByTime(DummyLetterData);
+
+  const handleLogout = () => {
+    setUserId("");
+    setUserName("");
+    nav("/");
+  };
+
+  const navToMypage = () => {
+    nav("/mypage");
+  };
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   return (
     <>
       <LayoutContainer>
         <ButtonsContainer>
-          <MyPageBtn>마이페이지</MyPageBtn>
-          <AddGroupBtn>그룹 추가하기</AddGroupBtn>
-          <LogoutBtn>로그아웃</LogoutBtn>
+          <MyPageBtn onClick={navToMypage}>마이페이지</MyPageBtn>
+          <AddGroupBtn onClick={openModal}>그룹 추가하기</AddGroupBtn>
+          <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
         </ButtonsContainer>
         <PageContainer>
+          <Modal isOpen={isModalOpen} onClose={closeModal} />
           <LeftContainer>
             <ScrollContainer>
               <GridContainer>
-                {DummyData.map((groupName, index) => (
-                  <Folder key={index} groupName={groupName} />
+                {DummyData.map((group, index) => (
+                  <Folder
+                    key={index}
+                    groupName={group.groupname}
+                    groupId={group.groupid}
+                  />
                 ))}
               </GridContainer>
             </ScrollContainer>
@@ -103,7 +124,7 @@ const PageContainer = styled.div`
 `;
 
 const LayoutContainer = styled.div`
-  background: linear-gradient(to bottom, #c0e1ee, #ffd5c3);
+  background: linear-gradient(to bottom, #d3f3ff, #ffd5c3);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -213,7 +234,6 @@ const RightContainer = styled.div`
   margin-left: 1rem;
   margin-right: 2rem;
   font-family: "neodgm";
-  //background-image: url(${rightImage});
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

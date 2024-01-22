@@ -1,15 +1,23 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 import logogif from "../assets/logogif-4.gif";
 import text from "../assets/textField.png";
+import { useNavigate } from "react-router-dom";
 import logoImage from "../assets/logo.png";
 import axios from "axios";
 import "../fonts/font.css";
 import API from "../services/api/index";
+import { useUserStore } from "../store/user";
 
 export default function LoginPage() {
+  const nav = useNavigate();
+  const { userid, setUserId, setUserName } = useUserStore();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    console.log(userid);
+  }, []);
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -19,21 +27,15 @@ export default function LoginPage() {
     setPassword(e.target.value);
   };
 
-  // const handleLogin = () => {
-  //   axios
-  //     .post("api/user/login", {
-  //       userName: username,
-  //       password: password,
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //     });
-
-  //   console.log("Username:", username);
-  //   console.log("Password:", password);
-  // };
+  const goToSignup = () => {
+    nav("/signup");
+  };
 
   const handleLogin = async () => {
+    if (!username || !password) {
+      alert("ID와 비밀번호를 모두 입력해주세요.");
+      return;
+    }
     try {
       const postData = {
         userName: username,
@@ -51,14 +53,26 @@ export default function LoginPage() {
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         console.log(response.data);
-      } else if (response.status === 409) {
+        const userid = response.data.userId;
+        const username = response.data.name;
+        setUserId(userid);
+        setUserName(username);
+        console.log(userid);
+        console.log(username);
+        nav("/main");
+      } else if (response.status === 400) {
         console.log("error");
       }
     } catch (error) {
       console.error("오류가 발생했습니다.", error);
-      // 오류 발생 시에 대한 처리
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -84,6 +98,7 @@ export default function LoginPage() {
             name="username"
             value={username}
             onChange={handleUsernameChange}
+            onKeyPress={handleKeyPress}
             style={{ backgroundImage: `url(${text})` }}
           />
         </FormGroup>
@@ -100,13 +115,18 @@ export default function LoginPage() {
             name="password"
             value={password}
             onChange={handlePasswordChange}
+            onKeyPress={handleKeyPress}
             style={{ backgroundImage: `url(${text})` }}
           />
         </FormGroup>
-        <StyledButton type="button" onClick={handleLogin}>
-          Login
-        </StyledButton>
-        <StyledButton type="button">Sign Up</StyledButton>
+        <ButtonsContainer>
+          <StyledButton type="button" onClick={handleLogin}>
+            Login
+          </StyledButton>
+          <StyledButton type="button" onClick={goToSignup}>
+            Sign Up
+          </StyledButton>
+        </ButtonsContainer>
       </LoginForm>
     </LoginContainer>
   );
@@ -154,4 +174,11 @@ const StyledButton = styled.button`
   img {
     margin-right: 10px;
   }
+`;
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 `;

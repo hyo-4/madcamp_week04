@@ -1,15 +1,23 @@
 import React from "react";
 import foldericon from "../assets/y_folder.png";
 import "../fonts/font.css";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 interface GroupProps {
   groupName: string;
+  groupId: string;
 }
 
-const Folder: React.FC<GroupProps> = ({ groupName }) => {
+const Folder: React.FC<GroupProps> = ({ groupName, groupId }) => {
+  const nav = useNavigate();
+
+  const handleFolderClick = () => {
+    nav(`/group/${groupId}`);
+  };
+
   return (
-    <div>
+    <div onClick={handleFolderClick}>
       <img
         src={foldericon}
         alt={groupName}
