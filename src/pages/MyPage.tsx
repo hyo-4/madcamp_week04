@@ -17,11 +17,6 @@ export default function MyPage() {
     { letterName: "Letter B", letterGroup: "Group 2" },
     { letterName: "Letter C", letterGroup: "Group 1" },
     { letterName: "Letter D", letterGroup: "Group 2" },
-    { letterName: "Letter A", letterGroup: "Group 1" },
-    { letterName: "Letter B", letterGroup: "Group 2" },
-    { letterName: "Letter C", letterGroup: "Group 1" },
-    { letterName: "Letter D", letterGroup: "Group 2" },
-    { letterName: "Letter A", letterGroup: "Group 1" },
   ];
 
   const dummyGroupData = [
@@ -29,32 +24,6 @@ export default function MyPage() {
     { groupname: "Group 2", groupCode: "def456" },
     { groupname: "Group 3", groupCode: "ghi789" },
     { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
   ];
 
   const navToMain = () => {
@@ -85,7 +54,7 @@ export default function MyPage() {
         </LeftContainer>
         <RightContainer>
           <ScrollContainer2>
-            <h2>내가 만든 그룹</h2>
+            <h2>내 그룹</h2>
             <GroupList>
               {dummyGroupData.map((group, index) => (
                 <GroupItem key={index}>

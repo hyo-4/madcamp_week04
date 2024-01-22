@@ -11,6 +11,7 @@ import "../fonts/font.css";
 import Lockedletter from "../components/Lockedletter";
 import API from "../services/api/index";
 import Modal from "./AddGroupPage";
+import axios from "axios";
 
 const sortDummyLetterDataByTime = (
   data: { name: string; time: string; group: string }[]
@@ -20,9 +21,39 @@ const sortDummyLetterDataByTime = (
   });
 };
 
+interface OrganizationData {
+  organizationId: number;
+  organizationName: string | null;
+}
+
 const MainPage: React.FC = () => {
   const { userid, setUserId, username, setUserName } = useUserStore();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [organizationData, setOrganizationData] = useState<OrganizationData[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/organizations",
+          { userId: userid },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        setOrganizationData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+  }, [userid]);
 
   const nav = useNavigate();
   const DummyData = [
@@ -70,11 +101,11 @@ const MainPage: React.FC = () => {
           <LeftContainer>
             <ScrollContainer>
               <GridContainer>
-                {DummyData.map((group, index) => (
+                {organizationData.map((org, index) => (
                   <Folder
                     key={index}
-                    groupName={group.groupname}
-                    groupId={group.groupid}
+                    groupName={org.organizationName ?? "Unnamed Group"}
+                    groupId={org.organizationId.toString()}
                   />
                 ))}
               </GridContainer>

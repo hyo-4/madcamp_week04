@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import backgroundImage from "../assets/grouppage.png";
-import letterImage from "../assets/letterbackground.png";
+import letterImage from "../assets/letter-form.png";
 import lockimage from "../assets/letter.png";
 import openimage from "../assets/openletter.png";
 import { FiArrowLeft } from "react-icons/fi";
@@ -188,9 +188,10 @@ const ModalBackground = styled.div<{ isOpen: boolean }>`
   right: 0; /* 가로 방향 가운데 정렬을 위해 추가 */
   bottom: 0; /* 세로 방향 가운데 정렬을 위해 추가 */
   background-image: url(${letterImage});
-  background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
+  background-color: rgba(0, 0, 0, 0.7);
+  background-size: 50%;
   z-index: 1;
 `;
 
@@ -244,7 +245,6 @@ const ModalContent = styled.div`
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.2s;
-
       &:hover {
         color: red;
       }

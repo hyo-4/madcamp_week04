@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import "../fonts/font.css";
+import axios from "axios";
+import { useUserStore } from "../store/user";
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,13 +11,78 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [groupName, setGroupName] = useState<string>("");
+  const [inviteNumber, setinviteNumber] = useState("");
+  const { userid } = useUserStore();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName(event.target.value);
   };
 
-  const handleSubmit = () => {
-    onClose();
+  const handleSubmit = async () => {
+    if (!groupName) {
+      alert("그룹이름을 입력해주세요");
+      return;
+    }
+    try {
+      const postData = {
+        OrganizationName: groupName,
+      };
+
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/organization/create",
+        postData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data.organizationInviteNumber);
+        const newInviteNumber = response.data.organizationInviteNumber;
+        const userdata = userid;
+        setinviteNumber(newInviteNumber);
+        if (userid != null && newInviteNumber != null) {
+          handleJoin(newInviteNumber, userdata);
+        }
+        onClose();
+      } else if (response.status === 400) {
+        console.log("error");
+      }
+    } catch (error) {
+      console.error("오류가 발생했습니다.", error);
+    }
+  };
+
+  const handleJoin = async (newInviteNumber: any, userdata: any) => {
+    try {
+      const joinData = {
+        userId: userdata,
+        organizationInviteNumber: newInviteNumber,
+      };
+
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/joinOrganization",
+        joinData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data);
+        onClose();
+      } else if (response.status === 400) {
+        console.log("error");
+      }
+    } catch (error) {
+      console.error("오류가 발생했습니다.", error);
+    }
   };
 
   if (!isOpen) {
