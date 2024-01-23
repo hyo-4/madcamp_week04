@@ -5,6 +5,7 @@ import backgroundimage from "../assets/signup2.png";
 import btnimage from "../assets/signinbtn.png";
 import "../fonts/font.css";
 import text from "../assets/textField.png";
+import axios from "axios";
 
 interface SignupProps {}
 
@@ -64,14 +65,25 @@ export default function SignupPage(props: SignupProps) {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-
-  // 회원가입 버튼 클릭 시 실행되는 함수
-  const handleSignup = () => {
-    // 모든 입력란이 채워져 있는지 확인
+  const handleSignup = async () => {
     if (id && name && password) {
-      alert("회원가입이 성공적으로 완료되었습니다.");
+      try {
+        // axios를 사용한 POST 요청
+        const response = await axios.post(
+          "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/signup",
+          {
+            userName: id,
+            name: name,
+            password: password,
+          }
+        );
+        alert("회원가입이 성공적으로 완료되었습니다.");
+        console.log(response.data);
+      } catch (error) {
+        console.error("회원가입 오류:", error);
+        alert("회원가입 중 오류가 발생했습니다.");
+      }
     } else {
-      // 하나 이상의 입력란이 비어있을 때, 알림 창 표시
       alert("모든 입력란을 작성해주세요.");
     }
   };

@@ -5,36 +5,94 @@ import letterImage from "../assets/letter-form.png";
 import lockimage from "../assets/letter.png";
 import openimage from "../assets/openletter.png";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUserStore } from "../store/user";
+import axios from "axios";
 
 interface LetterData {
-  letterName: string;
-  letterTime: string;
+  messageId: number;
+  fromNickName: string;
+  messageDescription: string;
+  messageTime: string;
   isRead: boolean;
+  toId: number;
+  fromId: number;
+  organizationId: number;
+  organizationName: string;
 }
-const Modal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
-  isOpen,
-  onClose,
-}) => {
+
+const Modal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+}> = ({ isOpen, onClose }) => {
+  const [fromNickName, setFromNickName] = useState("");
+  const [messageDescription, setMessageDescription] = useState("");
+  const [messageTime, setMessageTime] = useState("");
+  const { userid } = useUserStore();
+  const params = useParams();
+  const { memberid, groupid } = params;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const userData = userid;
+    const payload = {
+      fromNickName,
+      messageDescription,
+      messageTime,
+      isRead: false,
+      toId: memberid,
+      fromId: userData,
+      organizationId: groupid,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/write",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log("Letter sent successfully:", response.data);
+      onClose();
+    } catch (error) {
+      console.error("Error sending letter:", error);
+    }
+  };
+
   return (
     <ModalBackground isOpen={isOpen}>
       <ModalContent>
         <h2>편지 작성</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="senderName">보내는 사람</label>
-            <input type="text" id="senderName" />
+            <input
+              type="text"
+              id="senderName"
+              value={fromNickName}
+              onChange={(e) => setFromNickName(e.target.value)}
+            />
           </div>
           <div>
             <label htmlFor="letterContent">편지 내용</label>
             <textarea
               id="letterContent"
               placeholder="편지 내용을 입력하세요"
+              value={messageDescription}
+              onChange={(e) => setMessageDescription(e.target.value)}
             ></textarea>
           </div>
           <div>
             <label htmlFor="letterTime">편지가 도착할 시간</label>
-            <input type="datetime-local" id="letterTime" />
+            <input
+              type="datetime-local"
+              id="letterTime"
+              value={messageTime}
+              onChange={(e) => setMessageTime(e.target.value)}
+            />
           </div>
           <button type="submit">편지 보내기</button>
         </form>
@@ -47,7 +105,38 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 const MemberPage: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLetterOpen, setisLetterOpen] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const { userid } = useUserStore();
+  const params = useParams();
+  const { groupid, memberid } = params;
+  const [messageData, setMessageData] = useState<LetterData[]>([]);
   const nav = useNavigate();
+
+  useEffect(() => {
+    fetchMessageData();
+  }, [userid]);
+
+  const fetchMessageData = async () => {
+    const userdata = memberid;
+    try {
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/group",
+        { userId: userdata, organizationId: groupid },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      setMessageData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -55,6 +144,11 @@ const MemberPage: React.FC = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const openModalWithDescription = (description: string) => {
+    setModalContent(description);
+    setisLetterOpen(true);
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -64,22 +158,14 @@ const MemberPage: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const dummyData = [
-    { letterName: "익명", letterTime: "2024-01-25T21:00:00", isRead: false },
-    { letterName: "익명", letterTime: "2024-01-25T21:00:00", isRead: false },
-    { letterName: "익명", letterTime: "2024-01-20T21:00:00", isRead: true },
-    { letterName: "익명", letterTime: "2024-01-25T21:00:00", isRead: false },
-    { letterName: "익명", letterTime: "2024-01-25T21:00:00", isRead: false },
-    { letterName: "익명", letterTime: "2024-01-20T21:00:00", isRead: true },
-    { letterName: "익명", letterTime: "2024-01-25T21:00:00", isRead: false },
-    { letterName: "익명", letterTime: "2024-01-25T21:00:00", isRead: false },
-    { letterName: "익명", letterTime: "2024-01-20T21:00:00", isRead: true },
-    { letterName: "익명", letterTime: "2024-01-25T21:00:00", isRead: false },
-  ];
+  const closeLetter = () => {
+    setisLetterOpen(false);
+  };
 
   const renderLetters = () => {
-    return dummyData.map((letter, index) => {
-      const letterDeadline = new Date(letter.letterTime);
+    return messageData.map((letter, index) => {
+      const userdata = Number(userid);
+      const letterDeadline = new Date(letter.messageTime);
       const timeLeft = letterDeadline.getTime() - currentTime.getTime();
       const isExpired = timeLeft < 0;
 
@@ -88,11 +174,20 @@ const MemberPage: React.FC = () => {
         : `${Math.floor(timeLeft / (1000 * 60 * 60))}시간 ${Math.floor(
             (timeLeft / (1000 * 60)) % 60
           )}분 ${Math.floor((timeLeft / 1000) % 60)}초`;
+      const handleClick = () => {
+        if (userdata === letter.toId && isExpired) {
+          openModalWithDescription(letter.messageDescription);
+        } else if (userdata === letter.toId) {
+          alert("좀 더 기다리세요");
+        } else {
+          alert("편지에 대한 접근 권한이 없습니다.");
+        }
+      };
 
       return (
-        <LetterContainer key={index}>
+        <LetterContainer key={index} onClick={handleClick}>
           <img src={letter.isRead ? openimage : lockimage} alt="Letter" />
-          <span>{letter.letterName}</span>
+          <span>{letter.fromNickName}</span>
           <span>{formattedTimeLeft}</span>
         </LetterContainer>
       );
@@ -105,15 +200,35 @@ const MemberPage: React.FC = () => {
         <FiArrowLeft /> 뒤로가기
       </BackLink>
       <CenterContainer>
-        {renderLetters()}
+        {Array.isArray(messageData) && renderLetters()}
         <Button onClick={openModal}>편지 작성</Button>
       </CenterContainer>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <OpenLetter
+        isLetterOpen={isLetterOpen}
+        closeLetter={closeLetter}
+        messageDescription={modalContent}
+      />
     </GroupPageContainer>
   );
 };
 
 export default MemberPage;
+
+const OpenLetter: React.FC<{
+  isLetterOpen: boolean;
+  closeLetter: () => void;
+  messageDescription?: string;
+}> = ({ isLetterOpen, closeLetter, messageDescription }) => {
+  return (
+    <ModalBackground isOpen={isLetterOpen}>
+      <ModalContent>
+        {messageDescription && <p>{messageDescription}</p>}
+        <button onClick={closeLetter}>닫기</button>
+      </ModalContent>
+    </ModalBackground>
+  );
+};
 
 const GroupPageContainer = styled.div`
   background-image: url(${backgroundImage});

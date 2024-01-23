@@ -3,28 +3,85 @@ import styled, { keyframes } from "styled-components";
 import "../fonts/font.css";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/user";
-import letterimage from "../assets/openletter.png";
+import letterImage from "../assets/letter-form.png";
 import leftImage from "../assets/real-2.png";
 import { FaHome, FaArrowLeft } from "react-icons/fa";
 import MyLetter from "../components/MyLetter";
+import axios from "axios";
+
+interface OrganizationData {
+  organizationId: number;
+  organizationName: string | null;
+  organizationInviteNumber: string | null;
+}
+
+interface LetterData {
+  messageId: number;
+  fromNickName: string;
+  messageDescription: string;
+  messageTime: string;
+  isRead: boolean;
+  toId: number;
+  fromId: number;
+  organizationId: number;
+  organizationName: string;
+}
 
 export default function MyPage() {
-  const { username } = useUserStore();
+  const { username, userid } = useUserStore();
   const nav = useNavigate();
+  const [organizationData, setOrganizationData] = useState<OrganizationData[]>(
+    []
+  );
+  const [messageData, setMessageData] = useState<LetterData[]>([]);
 
-  const dummyData = [
-    { letterName: "Letter A", letterGroup: "Group 1" },
-    { letterName: "Letter B", letterGroup: "Group 2" },
-    { letterName: "Letter C", letterGroup: "Group 1" },
-    { letterName: "Letter D", letterGroup: "Group 2" },
-  ];
+  useEffect(() => {
+    fetchGroupData();
+    fetchMessageData();
+  }, [userid]);
 
-  const dummyGroupData = [
-    { groupname: "Group 1", groupCode: "abc123" },
-    { groupname: "Group 2", groupCode: "def456" },
-    { groupname: "Group 3", groupCode: "ghi789" },
-    { groupname: "Group 1", groupCode: "abc123" },
-  ];
+  const fetchGroupData = async () => {
+    const userdata = userid;
+    try {
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/organizations",
+        { userId: userid },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (response.data) setOrganizationData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  const fetchMessageData = async () => {
+    try {
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/show",
+        { userId: userid },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (Array.isArray(response.data)) {
+        setMessageData(response.data);
+      } else {
+        console.error("Expected an array, but got:", response.data);
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
 
   const navToMain = () => {
     nav("/main");
@@ -34,7 +91,6 @@ export default function MyPage() {
       <PageHeader>
         <HomeIcon onClick={navToMain}>
           <FaArrowLeft />
-          {/* <FaHome /> */}
         </HomeIcon>
         <Username>{username} 님 의 마이페이지</Username>
       </PageHeader>
@@ -42,13 +98,17 @@ export default function MyPage() {
         <LeftContainer>
           <ScrollContainer>
             <GridContainer>
-              {dummyData.map((data, index) => (
-                <MyLetter
-                  key={index} // 고유한 키를 설정해줍니다.
-                  letterName={data.letterName}
-                  letterGroup={data.letterGroup}
-                />
-              ))}
+              {messageData
+                ?.filter((data: LetterData) => data.isRead)
+                .map((data: LetterData, index: number) => (
+                  <MyLetter
+                    key={index}
+                    letterName={data.fromNickName}
+                    letterGroup={data.organizationName}
+                    letterContent={data.messageDescription}
+                    fromNickName={data.fromNickName}
+                  />
+                ))}
             </GridContainer>
           </ScrollContainer>
         </LeftContainer>
@@ -56,10 +116,10 @@ export default function MyPage() {
           <ScrollContainer2>
             <h2>내 그룹</h2>
             <GroupList>
-              {dummyGroupData.map((group, index) => (
+              {organizationData.map((group, index) => (
                 <GroupItem key={index}>
-                  <GroupName>{group.groupname}</GroupName>
-                  <GroupCode>{group.groupCode}</GroupCode>
+                  <GroupName>{group.organizationName}</GroupName>
+                  <GroupCode>{group.organizationInviteNumber}</GroupCode>
                 </GroupItem>
               ))}
             </GroupList>

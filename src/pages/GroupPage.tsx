@@ -6,6 +6,80 @@ import backgroundImage from "../assets/grouppage.png";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import axios from "axios";
+
+interface UserData {
+  userId: number;
+  name: string;
+}
+
+const GroupPage = () => {
+  const nav = useNavigate();
+  const { groupid } = useParams();
+  const [userData, setUserData] = useState<UserData[]>([]);
+  const dummyData = [
+    { memberid: 1, membername: "허진서" },
+    { memberid: 2, membername: "백승효" },
+    { memberid: 3, membername: "황승찬" },
+    { memberid: 4, membername: "송주호" },
+    { memberid: 5, membername: "이서윤" },
+    { memberid: 6, membername: "김자누" },
+  ];
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMember, setSelectedMember] = useState("");
+
+  const handleLiClick = (memberid: any) => {
+    nav(`/group/${groupid}/member/${memberid}`);
+  };
+
+  useEffect(() => {
+    console.log(groupid);
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    const groupdata = groupid;
+    try {
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/organization/users",
+        { organizationId: groupid },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      setUserData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  return (
+    <GroupPageContainer>
+      <BackLink onClick={() => nav(-1)}>
+        <FiArrowLeft /> 뒤로가기
+      </BackLink>
+      <CenterContainer>
+        <ul>
+          {userData.map((member) => (
+            <li
+              key={member.userId}
+              onClick={() => handleLiClick(member.userId)}
+            >
+              {member.name}
+            </li>
+          ))}
+        </ul>
+      </CenterContainer>
+    </GroupPageContainer>
+  );
+};
+
+export default GroupPage;
 
 const GroupPageContainer = styled.div`
   background-image: url(${backgroundImage});
@@ -62,61 +136,3 @@ const CenterContainer = styled.div`
     margin: 5px 0;
   }
 `;
-
-const GroupPage = () => {
-  const nav = useNavigate();
-  const { groupid } = useParams();
-  const dummyData = [
-    { memberid: 1, membername: "허진서" },
-    { memberid: 2, membername: "백승효" },
-    { memberid: 3, membername: "황승찬" },
-    { memberid: 4, membername: "송주호" },
-    { memberid: 5, membername: "이서윤" },
-    { memberid: 6, membername: "김자누" },
-    { memberid: 1, membername: "허진서" },
-    { memberid: 2, membername: "백승효" },
-    { memberid: 3, membername: "황승찬" },
-    { memberid: 4, membername: "송주호" },
-    { memberid: 5, membername: "이서윤" },
-  ];
-
-  const [showModal, setShowModal] = useState(false);
-  const [selectedMember, setSelectedMember] = useState("");
-
-  const handleLiClick = (memberid: any) => {
-    nav(`/group/${groupid}/member/${memberid}`);
-  };
-
-  useEffect(() => {
-    console.log(groupid);
-  }, []);
-
-  return (
-    <GroupPageContainer>
-      <BackLink onClick={() => nav(-1)}>
-        <FiArrowLeft /> 뒤로가기
-      </BackLink>
-      <h1>몰캠 4분반</h1>
-      <CenterContainer>
-        <ul>
-          {dummyData.map((member) => (
-            <li
-              key={member.memberid}
-              onClick={() => handleLiClick(member.memberid)}
-            >
-              {member.membername}
-            </li>
-          ))}
-        </ul>
-      </CenterContainer>
-      {/* {showModal && (
-        <Modal
-          membername={selectedMember}
-          onClose={() => setShowModal(false)}
-        />
-      )} */}
-    </GroupPageContainer>
-  );
-};
-
-export default GroupPage;

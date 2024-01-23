@@ -24,6 +24,7 @@ const sortDummyLetterDataByTime = (
 interface OrganizationData {
   organizationId: number;
   organizationName: string | null;
+  organizationInviteNumber: string | null;
 }
 interface LetterData {
   messageId: number;
@@ -156,14 +157,15 @@ const MainPage: React.FC = () => {
           <RightContainer>
             <ScrollContainer2>
               <h1>Lock</h1>
-              {messageData.map((letterData, index) => (
-                <Lockedletter
-                  key={index}
-                  personName={letterData.fromNickName}
-                  timedata={letterData.messageTime}
-                  groupname={letterData.organizationName}
-                />
-              ))}
+              {Array.isArray(messageData) &&
+                messageData.map((letterData, index) => (
+                  <Lockedletter
+                    key={index}
+                    personName={letterData.fromNickName}
+                    timedata={letterData.messageTime}
+                    groupname={letterData.organizationName}
+                  />
+                ))}
             </ScrollContainer2>
           </RightContainer>
         </PageContainer>
