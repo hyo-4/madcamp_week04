@@ -58,7 +58,7 @@ const MainPage: React.FC = () => {
   const fetchGroupData = async () => {
     try {
       const response = await axios.post(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/organizations",
+        "${process.env.API_URL}/api/user/organizations",
         { userId: userid },
         {
           headers: {
@@ -77,7 +77,7 @@ const MainPage: React.FC = () => {
   const fetchMessageData = async () => {
     try {
       const response = await axios.post(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/show",
+        "${process.env.API_URL}/api/messages/show",
         { userId: userid },
         {
           headers: {

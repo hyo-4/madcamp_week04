@@ -24,7 +24,7 @@ const JoinGroupModal: React.FC<JoinGroupModalProps> = ({ isOpen, onClose }) => {
       };
 
       const response = await axios.post(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/joinOrganization",
+        "${process.env.API_URL}/api/user/joinOrganization",
         joinData,
         {
           headers: {

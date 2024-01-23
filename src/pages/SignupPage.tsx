@@ -72,7 +72,7 @@ export default function SignupPage(props: SignupProps) {
       try {
         // axios를 사용한 POST 요청
         const response = await axios.post(
-          "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/signup",
+          "${process.env.API_URL}/api/user/signup",
           {
             userName: id,
             name: name,

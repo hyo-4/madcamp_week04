@@ -53,7 +53,7 @@ const Modal: React.FC<{
 
     try {
       const response = await axios.post(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/write",
+        "${process.env.API_URL}/api/messages/write",
         payload,
         {
           headers: {
@@ -128,7 +128,7 @@ const MemberPage: React.FC = () => {
     const userdata = memberid;
     try {
       const response = await axios.post(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/group",
+        "${process.env.API_URL}/api/messages/group",
         { userId: userdata, organizationId: groupid },
         {
           headers: {

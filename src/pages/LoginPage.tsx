@@ -43,7 +43,7 @@ export default function LoginPage() {
       };
 
       const response = await axios.post(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/login",
+        "${process.env.API_URL}/api/user/login",
         postData,
         {
           headers: {
