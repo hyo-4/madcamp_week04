@@ -1,66 +1,26 @@
+// JoinGroupModal.tsx
+import axios from "axios";
 import React, { useState } from "react";
 import styled from "styled-components";
-import "../fonts/font.css";
-import axios from "axios";
 import { useUserStore } from "../store/user";
 
-interface ModalProps {
+interface JoinGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  const [groupName, setGroupName] = useState<string>("");
-  const [inviteNumber, setinviteNumber] = useState("");
+const JoinGroupModal: React.FC<JoinGroupModalProps> = ({ isOpen, onClose }) => {
+  const [groupCode, setGroupCode] = useState<string>("");
   const { userid } = useUserStore();
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGroupName(event.target.value);
-  };
+  if (!isOpen) return null;
 
-  const handleSubmit = async () => {
-    if (!groupName) {
-      alert("그룹이름을 입력해주세요");
-      return;
-    }
-    try {
-      const postData = {
-        organizationName: groupName,
-      };
-
-      const response = await axios.post(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/organization/create",
-        postData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        console.log(response.data.organizationInviteNumber);
-        const newInviteNumber = response.data.organizationInviteNumber;
-        const userdata = userid;
-        setinviteNumber(newInviteNumber);
-        if (userid != null && newInviteNumber != null) {
-          handleJoin(newInviteNumber, userdata);
-        }
-        onClose();
-      } else if (response.status === 400) {
-        console.log("error");
-      }
-    } catch (error) {
-      console.error("오류가 발생했습니다.", error);
-    }
-  };
-
-  const handleJoin = async (newInviteNumber: any, userdata: any) => {
+  const handleJoin = async () => {
+    const userdata = userid;
     try {
       const joinData = {
         userId: userdata,
-        organizationInviteNumber: newInviteNumber,
+        organizationInviteNumber: groupCode,
       };
 
       const response = await axios.post(
@@ -85,22 +45,18 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
     <ModalOverlay>
       <ModalContainer>
-        <ModalTitle>그룹 추가</ModalTitle>
+        <ModalTitle>그룹 참여하기</ModalTitle>
         <ModalInput
           type="text"
-          placeholder="그룹 이름을 입력하세요"
-          value={groupName}
-          onChange={handleInputChange}
+          value={groupCode}
+          onChange={(e) => setGroupCode(e.target.value)}
+          placeholder="그룹 참여 코드 입력"
         />
         <ButtonContainer>
-          <ModalButton onClick={handleSubmit}>추가</ModalButton>
+          <ModalButton onClick={handleJoin}>참여하기</ModalButton>
           <ModalButton onClick={onClose}>닫기</ModalButton>
         </ButtonContainer>
       </ModalContainer>
@@ -108,7 +64,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default Modal;
+export default JoinGroupModal;
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -151,7 +107,7 @@ const ModalButton = styled.button`
   padding: 10px 20px;
   font-family: "neodgm";
   margin: 5px;
-  border: none;
-  background: none;
+  border: none; /* 테두리 제거 */
+  background: none; /* 배경 제거 */
   cursor: pointer;
 `;

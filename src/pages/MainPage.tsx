@@ -9,9 +9,9 @@ import { FiMenu } from "react-icons/fi";
 import Folder from "../components/folder";
 import "../fonts/font.css";
 import Lockedletter from "../components/Lockedletter";
-import API from "../services/api/index";
 import Modal from "./AddGroupPage";
 import axios from "axios";
+import JoinGroupModal from "../components/InvitedGroup";
 
 const sortDummyLetterDataByTime = (
   data: { name: string; time: string; group: string }[]
@@ -25,44 +25,73 @@ interface OrganizationData {
   organizationId: number;
   organizationName: string | null;
 }
+interface LetterData {
+  messageId: number;
+  fromNickName: string;
+  messageDescription: string;
+  messageTime: string;
+  isRead: boolean;
+  toId: number;
+  fromId: number;
+  organizationId: number;
+  organizationName: string;
+}
 
 const MainPage: React.FC = () => {
   const { userid, setUserId, username, setUserName } = useUserStore();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [isJoinGroupModalOpen, setJoinGroupModalOpen] = useState(false);
   const [organizationData, setOrganizationData] = useState<OrganizationData[]>(
     []
   );
+  const [messageData, setMessageData] = useState<LetterData[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/organizations",
-          { userId: userid },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
-        setOrganizationData(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-    fetchData();
+    fetchGroupData();
+    fetchMessageData();
   }, [userid]);
 
+  useEffect(() => {}, [isModalOpen]);
+
+  const fetchGroupData = async () => {
+    try {
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/user/organizations",
+        { userId: userid },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      setOrganizationData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  const fetchMessageData = async () => {
+    try {
+      const response = await axios.post(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/show",
+        { userId: userid },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      setMessageData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
   const nav = useNavigate();
-  const DummyData = [
-    { groupid: "1", groupname: "SMWU 20학번" },
-    { groupid: "2", groupname: "2-14반" },
-    { groupid: "3", groupname: "충남여고" },
-    { groupid: "4", groupname: "몰캠4분반" },
-    { groupid: "5", groupname: "dummy" },
-  ];
 
   const DummyLetterData = [
     { name: "허가네장녀3", time: "2024-01-25T21:00:00", group: "4분반" },
@@ -88,15 +117,28 @@ const MainPage: React.FC = () => {
     setModalOpen(false);
   };
 
+  const openJoinGroupModal = () => {
+    setJoinGroupModalOpen(true);
+  };
+
+  const closeJoinGroupModal = () => {
+    setJoinGroupModalOpen(false);
+  };
+
   return (
     <>
       <LayoutContainer>
         <ButtonsContainer>
           <MyPageBtn onClick={navToMypage}>마이페이지</MyPageBtn>
+          <AddGroupBtn onClick={openJoinGroupModal}>그룹 참여하기</AddGroupBtn>
           <AddGroupBtn onClick={openModal}>그룹 추가하기</AddGroupBtn>
           <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
         </ButtonsContainer>
         <PageContainer>
+          <JoinGroupModal
+            isOpen={isJoinGroupModalOpen}
+            onClose={closeJoinGroupModal}
+          />
           <Modal isOpen={isModalOpen} onClose={closeModal} />
           <LeftContainer>
             <ScrollContainer>
@@ -114,12 +156,12 @@ const MainPage: React.FC = () => {
           <RightContainer>
             <ScrollContainer2>
               <h1>Lock</h1>
-              {sortedDummyLetterData.map((letterData, index) => (
+              {messageData.map((letterData, index) => (
                 <Lockedletter
                   key={index}
-                  personName={letterData.name}
-                  timedata={letterData.time}
-                  groupname={letterData.group}
+                  personName={letterData.fromNickName}
+                  timedata={letterData.messageTime}
+                  groupname={letterData.organizationName}
                 />
               ))}
             </ScrollContainer2>
