@@ -31,6 +31,13 @@ const Modal: React.FC<{
   const { userid } = useUserStore();
   const params = useParams();
   const { memberid, groupid } = params;
+
+  // useEffect(() => {
+  //   setFromNickName("");
+  //   setMessageDescription("");
+  //   setMessageTime("");
+  // }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const userData = userid;

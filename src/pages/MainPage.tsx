@@ -39,7 +39,7 @@ interface LetterData {
 }
 
 const MainPage: React.FC = () => {
-  const { userid, setUserId, username, setUserName } = useUserStore();
+  const { userid, setUserId, setUserName } = useUserStore();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [isJoinGroupModalOpen, setJoinGroupModalOpen] = useState(false);
   const [organizationData, setOrganizationData] = useState<OrganizationData[]>(

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "../fonts/font.css";
 import axios from "axios";
@@ -17,6 +17,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName(event.target.value);
   };
+
+  useEffect(() => {
+    setGroupName("");
+    setinviteNumber("");
+  }, [isOpen, onClose]);
 
   const handleSubmit = async () => {
     if (!groupName) {
