@@ -13,11 +13,11 @@ import Modal from "./AddGroupPage";
 import axios from "axios";
 import JoinGroupModal from "../components/InvitedGroup";
 
-const sortDummyLetterDataByTime = (
-  data: { name: string; time: string; group: string }[]
-): { name: string; time: string; group: string }[] => {
+const sortDummyLetterDataByTime = (data: any): { data: LetterData[] }[] => {
   return [...data].sort((a, b) => {
-    return new Date(a.time).getTime() - new Date(b.time).getTime();
+    return (
+      new Date(a.messageTime).getTime() - new Date(b.messageTime).getTime()
+    );
   });
 };
 
@@ -46,13 +46,14 @@ const MainPage: React.FC = () => {
     []
   );
   const [messageData, setMessageData] = useState<LetterData[]>([]);
+  let filteredAndSortedMessageData: LetterData[] = [];
 
   useEffect(() => {
     fetchGroupData();
     fetchMessageData();
   }, [userid]);
 
-  useEffect(() => {}, [isModalOpen]);
+  useEffect(() => {}, [isModalOpen, isJoinGroupModalOpen]);
 
   const fetchGroupData = async () => {
     try {
@@ -67,7 +68,7 @@ const MainPage: React.FC = () => {
         }
       );
       setOrganizationData(response.data);
-      console.log(response.data);
+      //console.log(response.data);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -94,12 +95,6 @@ const MainPage: React.FC = () => {
 
   const nav = useNavigate();
 
-  const DummyLetterData = [
-    { name: "허가네장녀3", time: "2024-01-25T21:00:00", group: "4분반" },
-    { name: "허가네장녀3", time: "2024-01-26T21:30:00", group: "4분반" },
-  ];
-  const sortedDummyLetterData = sortDummyLetterDataByTime(DummyLetterData);
-
   const handleLogout = () => {
     setUserId("");
     setUserName("");
@@ -125,6 +120,17 @@ const MainPage: React.FC = () => {
   const closeJoinGroupModal = () => {
     setJoinGroupModalOpen(false);
   };
+
+  if (Array.isArray(messageData)) {
+    filteredAndSortedMessageData = messageData
+      .filter((letter) => !letter.isRead)
+      .sort(
+        (a, b) =>
+          new Date(a.messageTime).getTime() - new Date(b.messageTime).getTime()
+      );
+  } else {
+    console.error("messageData is not an array");
+  }
 
   return (
     <>
@@ -157,15 +163,19 @@ const MainPage: React.FC = () => {
           <RightContainer>
             <ScrollContainer2>
               <h1>Lock</h1>
-              {Array.isArray(messageData) &&
-                messageData.map((letterData, index) => (
+              {Array.isArray(filteredAndSortedMessageData) &&
+              filteredAndSortedMessageData.length > 0 ? (
+                filteredAndSortedMessageData.map((letterData, index) => (
                   <Lockedletter
                     key={index}
                     personName={letterData.fromNickName}
                     timedata={letterData.messageTime}
                     groupname={letterData.organizationName}
                   />
-                ))}
+                ))
+              ) : (
+                <p>No messages to display</p>
+              )}
             </ScrollContainer2>
           </RightContainer>
         </PageContainer>

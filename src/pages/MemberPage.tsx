@@ -162,6 +162,25 @@ const MemberPage: React.FC = () => {
     setisLetterOpen(false);
   };
 
+  const ReadMessage = async (messageid: number) => {
+    try {
+      const response = await axios.put(
+        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/read",
+        { messageId: messageid },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log("compelte");
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
   const renderLetters = () => {
     return messageData.map((letter, index) => {
       const userdata = Number(userid);
@@ -177,6 +196,7 @@ const MemberPage: React.FC = () => {
       const handleClick = () => {
         if (userdata === letter.toId && isExpired) {
           openModalWithDescription(letter.messageDescription);
+          ReadMessage(letter.messageId);
         } else if (userdata === letter.toId) {
           alert("좀 더 기다리세요");
         } else {

@@ -6,6 +6,7 @@ import btnimage from "../assets/signinbtn.png";
 import "../fonts/font.css";
 import text from "../assets/textField.png";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface SignupProps {}
 
@@ -65,6 +66,7 @@ export default function SignupPage(props: SignupProps) {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const nav = useNavigate();
   const handleSignup = async () => {
     if (id && name && password) {
       try {
@@ -78,7 +80,8 @@ export default function SignupPage(props: SignupProps) {
           }
         );
         alert("회원가입이 성공적으로 완료되었습니다.");
-        console.log(response.data);
+        nav("/");
+        //  console.log(response.data);
       } catch (error) {
         console.error("회원가입 오류:", error);
         alert("회원가입 중 오류가 발생했습니다.");
