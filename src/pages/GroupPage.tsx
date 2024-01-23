@@ -42,7 +42,7 @@ const GroupPage = () => {
     const groupdata = groupid;
     try {
       const response = await axios.post(
-        "${process.env.API_URL}/api/organization/users",
+        `${process.env.REACT_APP_API_URL}/api/organization/users`,
         { organizationId: groupid },
         {
           headers: {

@@ -20,10 +20,9 @@ const LetterImage = styled.img`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 14rem;
-  right: 30rem;
+  top: 10px; /* 오른쪽 상단으로 이동 */
+  right: 10px; /* 오른쪽 상단으로 이동 */
   font-family: "neodgm";
-
   background: none;
   border: none;
   font-size: 16px;
@@ -52,7 +51,19 @@ const ModalContent = styled.div`
   font-family: "neodgm";
   width: 500px;
   height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
+
+const MessageContent = styled.div`
+  margin-bottom: 5rem;
+`;
+
+const NickName = styled.div`
+  margin-top: 5rem;
+`;
+
 interface MyLetterProps {
   letterName: string;
   letterGroup: string;
@@ -95,9 +106,9 @@ const MyLetter: React.FC<MyLetterProps> = ({
       </LetterContainer>
       <Modal show={showModal} ref={modalRef}>
         <ModalContent>
-          <div>{letterContent}</div>
-          <div>{fromNickName}</div>
-          <CloseButton onClick={toggleModal}>x</CloseButton>
+          <MessageContent>{letterContent}</MessageContent>
+          <NickName>{fromNickName}</NickName>
+          <CloseButton onClick={toggleModal}>close</CloseButton>
         </ModalContent>
       </Modal>
     </>

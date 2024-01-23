@@ -58,7 +58,7 @@ const MainPage: React.FC = () => {
   const fetchGroupData = async () => {
     try {
       const response = await axios.post(
-        "${process.env.API_URL}/api/user/organizations",
+        `${process.env.REACT_APP_API_URL}/api/user/organizations`,
         { userId: userid },
         {
           headers: {
@@ -77,7 +77,7 @@ const MainPage: React.FC = () => {
   const fetchMessageData = async () => {
     try {
       const response = await axios.post(
-        "${process.env.API_URL}/api/messages/show",
+        `${process.env.REACT_APP_API_URL}/api/messages/show`,
         { userId: userid },
         {
           headers: {

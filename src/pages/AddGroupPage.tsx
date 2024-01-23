@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       };
 
       const response = await axios.post(
-        "${process.env.API_URL}/api/organization/create",
+        `${process.env.REACT_APP_API_URL}/api/organization/create`,
         postData,
         {
           headers: {
@@ -69,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       };
 
       const response = await axios.post(
-        "${process.env.API_URL}/api/user/joinOrganization",
+        `${process.env.REACT_APP_API_URL}/api/user/joinOrganization`,
         joinData,
         {
           headers: {

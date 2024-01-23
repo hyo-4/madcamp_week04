@@ -43,7 +43,7 @@ export default function LoginPage() {
       };
 
       const response = await axios.post(
-        "${process.env.API_URL}/api/user/login",
+        `${process.env.REACT_APP_API_URL}/api/user/login`,
         postData,
         {
           headers: {
