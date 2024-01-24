@@ -44,7 +44,7 @@ export default function MyPage() {
     const userdata = userid;
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/organizations`,
+        `http://43.200.25.159/api/user/organizations`,
         { userId: userid },
         {
           headers: {
@@ -63,7 +63,7 @@ export default function MyPage() {
   const fetchMessageData = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/messages/show`,
+        `http://43.200.25.159/api/messages/show`,
         { userId: userid },
         {
           headers: {

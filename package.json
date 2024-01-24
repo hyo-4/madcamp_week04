@@ -1,5 +1,4 @@
 {
-  "homepage": "https://hyo-4.github.io/madcamp_week04/",
   "name": "madcamp_week04",
   "version": "0.1.0",
   "private": true,
@@ -54,5 +53,5 @@
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.2.4"
   },
-  "proxy": "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080"
+  "proxy": "http://43.200.25.159"
 }

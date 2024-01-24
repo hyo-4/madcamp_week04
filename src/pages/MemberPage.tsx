@@ -53,7 +53,7 @@ const Modal: React.FC<{
 
     try {
       const response = await axios.post(
-        "${process.env.API_URL}/api/messages/write",
+        "http://43.200.25.159/api/messages/write",
         payload,
         {
           headers: {
@@ -128,7 +128,7 @@ const MemberPage: React.FC = () => {
     const userdata = memberid;
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/messages/group`,
+        `http://43.200.25.159/api/messages/group`,
         { userId: userdata, organizationId: groupid },
         {
           headers: {
@@ -163,6 +163,7 @@ const MemberPage: React.FC = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    nav(0);
   };
 
   const closeLetter = () => {
@@ -172,7 +173,7 @@ const MemberPage: React.FC = () => {
   const ReadMessage = async (messageid: number) => {
     try {
       const response = await axios.put(
-        "http://ec2-3-36-116-35.ap-northeast-2.compute.amazonaws.com:8080/api/messages/read",
+        "http://43.200.25.159/api/messages/read",
         { messageId: messageid },
         {
           headers: {

@@ -58,7 +58,7 @@ const MainPage: React.FC = () => {
   const fetchGroupData = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/organizations`,
+        `http://43.200.25.159/api/user/organizations`,
         { userId: userid },
         {
           headers: {
@@ -77,7 +77,7 @@ const MainPage: React.FC = () => {
   const fetchMessageData = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/messages/show`,
+        `http://43.200.25.159/api/messages/show`,
         { userId: userid },
         {
           headers: {
@@ -111,6 +111,7 @@ const MainPage: React.FC = () => {
 
   const closeModal = () => {
     setModalOpen(false);
+    nav(0);
   };
 
   const openJoinGroupModal = () => {
@@ -119,6 +120,7 @@ const MainPage: React.FC = () => {
 
   const closeJoinGroupModal = () => {
     setJoinGroupModalOpen(false);
+    nav(0);
   };
 
   if (Array.isArray(messageData)) {

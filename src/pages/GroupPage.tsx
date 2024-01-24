@@ -17,14 +17,6 @@ const GroupPage = () => {
   const nav = useNavigate();
   const { groupid } = useParams();
   const [userData, setUserData] = useState<UserData[]>([]);
-  const dummyData = [
-    { memberid: 1, membername: "허진서" },
-    { memberid: 2, membername: "백승효" },
-    { memberid: 3, membername: "황승찬" },
-    { memberid: 4, membername: "송주호" },
-    { memberid: 5, membername: "이서윤" },
-    { memberid: 6, membername: "김자누" },
-  ];
 
   const [showModal, setShowModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState("");
@@ -42,7 +34,7 @@ const GroupPage = () => {
     const groupdata = groupid;
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/organization/users`,
+        `http://43.200.25.159/api/organization/users`,
         { organizationId: groupid },
         {
           headers: {
