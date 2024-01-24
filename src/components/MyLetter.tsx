@@ -3,6 +3,7 @@ import styled from "styled-components";
 import letterImage from "../assets/openletter.png";
 import modalBackgroundImage from "../assets/letter-form.png"; // 모달 배경 이미지 경로
 import "../fonts/font.css";
+import { IoClose } from "react-icons/io5";
 
 const LetterContainer = styled.div`
   display: flex;
@@ -16,17 +17,6 @@ const LetterContainer = styled.div`
 const LetterImage = styled.img`
   width: 100px;
   height: 100px;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px; /* 오른쪽 상단으로 이동 */
-  right: 10px; /* 오른쪽 상단으로 이동 */
-  font-family: "neodgm";
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
 `;
 
 const Modal = styled.div<{ show: boolean }>`
@@ -44,6 +34,7 @@ const Modal = styled.div<{ show: boolean }>`
 
 const ModalContent = styled.div`
   background-image: url(${modalBackgroundImage});
+  position: relative; // Set position relative
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -56,12 +47,29 @@ const ModalContent = styled.div`
   justify-content: space-between;
 `;
 
-const MessageContent = styled.div`
-  margin-bottom: 5rem;
+const NickName = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  margin-top: 5rem;
+  font-size: 22px;
+  margin-right: 3rem;
 `;
 
-const NickName = styled.div`
-  margin-top: 5rem;
+const MessageContent = styled.div`
+  margin: auto;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  font-family: "neodgm";
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  in-top: 5rem;
 `;
 
 interface MyLetterProps {
@@ -108,7 +116,9 @@ const MyLetter: React.FC<MyLetterProps> = ({
         <ModalContent>
           <MessageContent>{letterContent}</MessageContent>
           <NickName>{fromNickName}</NickName>
-          <CloseButton onClick={toggleModal}>close</CloseButton>
+          <CloseButton onClick={toggleModal}>
+            <IoClose />
+          </CloseButton>
         </ModalContent>
       </Modal>
     </>

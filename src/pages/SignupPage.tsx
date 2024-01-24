@@ -81,7 +81,6 @@ export default function SignupPage(props: SignupProps) {
         );
         alert("회원가입이 성공적으로 완료되었습니다.");
         nav("/");
-        //  console.log(response.data);
       } catch (error) {
         console.error("회원가입 오류:", error);
         alert("회원가입 중 오류가 발생했습니다.");

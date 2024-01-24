@@ -77,7 +77,6 @@ export default function MyPage() {
       } else {
         console.error("Expected an array, but got:", response.data);
       }
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }

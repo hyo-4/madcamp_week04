@@ -35,7 +35,6 @@ const JoinGroupModal: React.FC<JoinGroupModalProps> = ({ isOpen, onClose }) => {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
         onClose();
       } else if (response.status === 400) {
         console.log("error");

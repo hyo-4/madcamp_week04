@@ -54,13 +54,10 @@ export default function LoginPage() {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
         const userid = response.data.userId;
         const username = response.data.name;
         setUserId(userid);
         setUserName(username);
-        console.log(userid);
-        console.log(username);
         nav("/main");
       } else if (response.status === 400) {
         console.log("error");

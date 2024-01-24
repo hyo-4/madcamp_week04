@@ -7,6 +7,7 @@ import openimage from "../assets/openletter.png";
 import { FiArrowLeft } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../store/user";
+import { IoClose } from "react-icons/io5";
 import axios from "axios";
 
 interface LetterData {
@@ -32,14 +33,17 @@ const Modal: React.FC<{
   const params = useParams();
   const { memberid, groupid } = params;
 
-  // useEffect(() => {
-  //   setFromNickName("");
-  //   setMessageDescription("");
-  //   setMessageTime("");
-  // }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (
+      !fromNickName.trim() ||
+      !messageDescription.trim() ||
+      !messageTime.trim()
+    ) {
+      alert("모든 내용을 채워주세요.");
+      return;
+    }
     const userData = userid;
     const payload = {
       fromNickName,
@@ -62,7 +66,7 @@ const Modal: React.FC<{
           withCredentials: true,
         }
       );
-      console.log("Letter sent successfully:", response.data);
+
       onClose();
     } catch (error) {
       console.error("Error sending letter:", error);
@@ -72,26 +76,7 @@ const Modal: React.FC<{
   return (
     <ModalBackground isOpen={isOpen}>
       <ModalContent>
-        <h2>편지 작성</h2>
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="senderName">보내는 사람</label>
-            <input
-              type="text"
-              id="senderName"
-              value={fromNickName}
-              onChange={(e) => setFromNickName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="letterContent">편지 내용</label>
-            <textarea
-              id="letterContent"
-              placeholder="편지 내용을 입력하세요"
-              value={messageDescription}
-              onChange={(e) => setMessageDescription(e.target.value)}
-            ></textarea>
-          </div>
           <div>
             <label htmlFor="letterTime">편지가 도착할 시간</label>
             <input
@@ -101,8 +86,30 @@ const Modal: React.FC<{
               onChange={(e) => setMessageTime(e.target.value)}
             />
           </div>
-          <button type="submit">편지 보내기</button>
+          <div>
+            <label htmlFor="letterContent">편지 내용</label>
+            <LetterContent
+              id="letterContent"
+              placeholder="편지 내용을 입력하세요"
+              value={messageDescription}
+              onChange={(e) => setMessageDescription(e.target.value)}
+            ></LetterContent>
+          </div>
+
+          <div>
+            <label htmlFor="senderName">From </label>
+            <input
+              type="text"
+              id="senderName"
+              placeholder="보내는 사람의 이름을 입력해주세요"
+              value={fromNickName}
+              onChange={(e) => setFromNickName(e.target.value)}
+            />
+          </div>
         </form>
+        <button type="submit" onClick={handleSubmit}>
+          편지 보내기
+        </button>
         <button onClick={onClose}>닫기</button>
       </ModalContent>
     </ModalBackground>
@@ -138,7 +145,6 @@ const MemberPage: React.FC = () => {
         }
       );
       setMessageData(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -168,6 +174,7 @@ const MemberPage: React.FC = () => {
 
   const closeLetter = () => {
     setisLetterOpen(false);
+    nav(0);
   };
 
   const ReadMessage = async (messageid: number) => {
@@ -183,7 +190,6 @@ const MemberPage: React.FC = () => {
         }
       );
       console.log("compelte");
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -250,10 +256,10 @@ const OpenLetter: React.FC<{
 }> = ({ isLetterOpen, closeLetter, messageDescription }) => {
   return (
     <ModalBackground isOpen={isLetterOpen}>
-      <ModalContent>
+      <CloseButton onClick={closeLetter}>X</CloseButton>
+      <LetterText>
         {messageDescription && <p>{messageDescription}</p>}
-        <button onClick={closeLetter}>닫기</button>
-      </ModalContent>
+      </LetterText>
     </ModalBackground>
   );
 };
@@ -328,8 +334,8 @@ const ModalBackground = styled.div<{ isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
-  right: 0; /* 가로 방향 가운데 정렬을 위해 추가 */
-  bottom: 0; /* 세로 방향 가운데 정렬을 위해 추가 */
+  right: 0;
+  bottom: 0;
   background-image: url(${letterImage});
   background-repeat: no-repeat;
   background-position: center center;
@@ -377,20 +383,20 @@ const ModalContent = styled.div`
         resize: none; /* 크기 조절 비활성화 */
       }
     }
+  }
 
-    button[type="submit"] {
-      margin-top: 10px;
-      background-color: transparent;
-      color: #000000;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.2s;
-      &:hover {
-        color: red;
-      }
+  button[type="submit"] {
+    margin-top: 10px;
+    background-color: transparent;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.2s;
+    &:hover {
+      color: #ff9191;
     }
   }
 
@@ -399,8 +405,12 @@ const ModalContent = styled.div`
     font-family: "neodgm";
     font-size: 20px;
     border: none;
+    margin: 1rem;
     background: transparent;
     cursor: pointer;
+    &:hover {
+      color: #ff9191;
+    }
   }
 `;
 
@@ -412,4 +422,42 @@ const Button = styled.button`
   border: none;
   background: transparent;
   right: 20px;
+  &:hover {
+    color: #ff0e0e;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10%;
+  right: 30%;
+  font-weight: 800;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+
+  @media (max-width: 1300px) {
+    top: 70%;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+`;
+
+const LetterContent = styled.textarea`
+  width: 100%;
+  height: 200px;
+  padding: 5px;
+  font-size: 14px;
+  border: none; /* 테두리 없음 */
+  background: transparent; /* 투명한 배경 */
+`;
+
+const LetterText = styled.div`
+  position: relative;
+  max-width: 90%;
+  max-height: 80%;
+  overflow: auto;
+  padding: 20px;
+  color: black;
 `;
