@@ -1,7 +1,9 @@
 
 
 ### 💌 LOCK(樂)FOLDER
-LOCK(樂)FOLDER 는 편지에 감정을 담아, 미래로 전송할 수 있는 느린 편지함 서비스입니다:)
+<img src="https://github.com/hyo-4/madcamp_week04/assets/70904075/f6ac5fe0-85b1-4fa3-adb1-e39c4eebed8b" width=300 height=300>
+
+<b>LOCK(樂)FOLDER 는 편지에 감정을 담아, 미래로 전송할 수 있는 느린 편지함 서비스입니다:)</b> <br/>
 지금 당신의 마음을 느린 편지에 담아 보내세요 💛 
 
 
