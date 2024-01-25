@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from "react";
 import styled from "styled-components";
 import lockimage from "../assets/letter.png";
+import openimage from "../assets/openletter.png";
 
 interface LockedletterProps {
   personName: string;
@@ -71,14 +72,25 @@ export default class Lockedletter extends Component<
   render(): ReactNode {
     return (
       <div>
+        <GroupText> {this.props.groupname}</GroupText>
         <NameContainer>
           <img
-            src={lockimage}
-            alt="lock"
+            src={
+              this.state.remainingTime === "잠금이 풀렸습니다!"
+                ? openimage
+                : lockimage
+            }
+            alt={
+              this.state.remainingTime === "잠금이 풀렸습니다!"
+                ? "open"
+                : "lock"
+            }
             style={{ width: "30px", height: "20px" }}
           />
+
           <NameText>{this.props.personName}님이 보낸 편지</NameText>
         </NameContainer>
+
         <Wrapper>{this.state.remainingTime}</Wrapper>
       </div>
     );
@@ -88,15 +100,22 @@ export default class Lockedletter extends Component<
 const Wrapper = styled.div`
   font-size: 1rem;
   font-weight: bold;
+  margin-bottom: 2.5rem;
 `;
 
 const NameContainer = styled.div`
   display: flex;
+  margin: 0;
   flex-direction: row;
   padding: 0.5rem;
 `;
 
-const NameText = styled.p`
+const NameText = styled.div`
   margin: 0;
+  padding: 0;
   margin-left: 1rem;
+`;
+
+const GroupText = styled.div`
+  margin: 0;
 `;

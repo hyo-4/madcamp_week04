@@ -455,9 +455,14 @@ const LetterContent = styled.textarea`
 
 const LetterText = styled.div`
   position: relative;
+  width: 500px;
   max-width: 90%;
   max-height: 80%;
-  overflow: auto;
   padding: 20px;
   color: black;
+  @media (max-width: 900px) {
+    width: 150px;
+    max-width: 90%;
+    max-height: 80%;
+  }
 `;

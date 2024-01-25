@@ -7,6 +7,7 @@ import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import axios from "axios";
+import { useUserStore } from "../store/user";
 
 interface UserData {
   userId: number;
@@ -15,6 +16,7 @@ interface UserData {
 
 const GroupPage = () => {
   const nav = useNavigate();
+  const { userid } = useUserStore();
   const { groupid } = useParams();
   const [userData, setUserData] = useState<UserData[]>([]);
 
@@ -49,11 +51,32 @@ const GroupPage = () => {
     }
   };
 
+  const DeleteUser = async () => {
+    const groupdata = groupid;
+    const userdata = userid;
+    try {
+      const response = await axios.delete(
+        `http://43.200.25.159/api/user-organization/remove`,
+        {
+          params: {
+            userId: userdata,
+            organizationId: groupdata,
+          },
+        }
+      );
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    nav("/main");
+  };
+
   return (
     <GroupPageContainer>
       <BackLink onClick={() => nav(-1)}>
         <FiArrowLeft /> 뒤로가기
       </BackLink>
+      <DeleteMember onClick={DeleteUser}>그룹 나가기</DeleteMember>
       <CenterContainer>
         <ul>
           {userData.map((member) => (
@@ -88,13 +111,28 @@ const GroupPageContainer = styled.div`
 
 const BackLink = styled.a`
   position: absolute;
-  top: 10px; /* 조정할 수 있는 값 */
-  left: 10px; /* 조정할 수 있는 값 */
+  top: 10px;
+  left: 1cap;
   color: #000000;
   text-decoration: none;
   font-size: 22px;
   display: flex;
   align-items: center;
+`;
+
+const DeleteMember = styled.a`
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  color: #000000;
+  text-decoration: none;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    transform: scale(1.1);
+    color: red;
+  }
 `;
 
 const CenterContainer = styled.div`

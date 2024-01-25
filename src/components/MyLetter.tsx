@@ -38,7 +38,7 @@ const ModalContent = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  padding: 20px;
+  padding: 2rem;
   font-family: "neodgm";
   width: 500px;
   height: 300px;
@@ -58,6 +58,7 @@ const NickName = styled.div`
 
 const MessageContent = styled.div`
   margin: auto;
+  overflow: hidden;
 `;
 
 const CloseButton = styled.button`
